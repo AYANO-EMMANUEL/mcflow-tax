@@ -80,7 +80,7 @@ export default function Home() {
       </section>
 
       {/* Quick Start Preview */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 bg-zinc-50 dark:bg-zinc-950">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 bg-zinc-50 dark:bg-zinc-950 my-12">
         <div className="max-w-3xl mx-auto">
           <h2 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50 mb-4">Quick Start</h2>
           <p className="text-lg text-zinc-600 dark:text-zinc-400 mb-8">
@@ -96,7 +96,7 @@ export default function Home() {
           <div className="mt-6">
             <Link
               href="/guides"
-              className="text-green-600 dark:text-green-400 hover:underline font-medium"
+              className="text-green-600 dark:text-green-400 rounded bg-white p-3 px-4 hover:underline font-medium"
             >
               Read the full guide →
             </Link>
