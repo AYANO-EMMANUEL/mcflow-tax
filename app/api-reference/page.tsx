@@ -79,36 +79,36 @@ export default function APIReference() {
   ];
 
   return (
-    <div className="min-h-screen bg-white dark:bg-black">
+    <div className="min-h-screen bg-white">
       <Navigation />
 
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="max-w-5xl mx-auto">
           <div className="mb-8">
-            <h1 className="text-4xl font-bold text-zinc-900 dark:text-zinc-50 mb-4">API Reference</h1>
-            <p className="text-lg text-zinc-600 dark:text-zinc-400">
+            <h1 className="text-4xl font-bold text-green-800 mb-4">API Reference</h1>
+            <p className="text-lg text-green-700">
               Explore our comprehensive API endpoints organized by resource type. All endpoints follow RESTful conventions and use standard HTTP methods.
             </p>
           </div>
 
-          <div className="mb-6 p-6 bg-zinc-900 dark:bg-zinc-800 rounded-lg">
-            <h3 className="text-lg font-semibold text-zinc-50 mb-3">Base URL</h3>
+          <div className="mb-6 p-6 bg-green-800 rounded-lg">
+            <h3 className="text-lg font-semibold text-white mb-3">Base URL</h3>
             <code className="text-green-400 font-mono">https://api.mcflow.ng</code>
-            <p className="text-sm text-zinc-400 mt-2">
+            <p className="text-sm text-green-100 mt-2">
               All API requests should be made to this base URL. The current API version is v2.
             </p>
           </div>
 
           <div className="space-y-6">
             {apiSections.map((section, sectionIndex) => (
-              <div key={sectionIndex} className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg overflow-hidden">
+              <div key={sectionIndex} className="bg-white border-2 border-green-200 rounded-lg overflow-hidden">
                 <button
                   onClick={() => setActiveSection(activeSection === section.title ? null : section.title)}
-                  className="w-full px-6 py-4 flex items-center justify-between hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
+                  className="w-full px-6 py-4 flex items-center justify-between hover:bg-green-50 transition-colors"
                 >
-                  <h3 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">{section.title}</h3>
+                  <h3 className="text-xl font-semibold text-green-800">{section.title}</h3>
                   <svg
-                    className={`w-5 h-5 text-zinc-500 dark:text-zinc-400 transition-transform ${
+                    className={`w-5 h-5 text-white0 dark:text-green-100 transition-transform ${
                       activeSection === section.title ? 'rotate-180' : ''
                     }`}
                     fill="none"
@@ -119,21 +119,21 @@ export default function APIReference() {
                   </svg>
                 </button>
                 {activeSection === section.title && (
-                  <div className="px-6 pb-6 space-y-3 border-t border-zinc-200 dark:border-zinc-800 pt-4">
+                  <div className="px-6 pb-6 space-y-3 border-t border-green-200 pt-4">
                     {section.endpoints.map((endpoint, index) => (
-                      <div key={index} className="p-4 bg-zinc-50 dark:bg-zinc-950 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors">
+                      <div key={index} className="p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
                         <div className="flex items-center gap-3 mb-2">
                           <span className={`px-2 py-1 text-xs font-mono font-semibold rounded ${
-                            endpoint.method === 'GET' ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400' :
-                            endpoint.method === 'POST' ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400' :
-                            endpoint.method === 'PUT' ? 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400' :
-                            'bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-400'
+                            endpoint.method === 'GET' ? 'bg-blue-100 text-blue-700' :
+                            endpoint.method === 'POST' ? 'bg-green-100 text-green-700' :
+                            endpoint.method === 'PUT' ? 'bg-yellow-100 text-yellow-700' :
+                            'bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-green-100'
                           }`}>
                             {endpoint.method}
                           </span>
-                          <code className="text-sm font-mono text-zinc-900 dark:text-zinc-50">{endpoint.path}</code>
+                          <code className="text-sm font-mono text-green-800">{endpoint.path}</code>
                         </div>
-                        <p className="text-sm text-zinc-600 dark:text-zinc-400 ml-16">{endpoint.description}</p>
+                        <p className="text-sm text-green-700 ml-16">{endpoint.description}</p>
                       </div>
                     ))}
                   </div>

@@ -54,15 +54,15 @@ export default function Pricing() {
   ];
 
   return (
-    <div className="min-h-screen bg-white dark:bg-black">
+    <div className="min-h-screen bg-white">
       <Navigation />
 
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <h1 className="text-4xl sm:text-5xl font-bold text-zinc-900 dark:text-zinc-50 mb-6">
+          <h1 className="text-4xl sm:text-5xl font-bold text-green-800 mb-6">
             Simple, Transparent Pricing
           </h1>
-          <p className="text-xl text-zinc-600 dark:text-zinc-400">
+          <p className="text-xl text-green-700">
             Choose the plan that&apos;s right for your business. All plans include access to our API and dashboard.
           </p>
         </div>
@@ -73,8 +73,8 @@ export default function Pricing() {
               key={index}
               className={`relative p-8 border rounded-xl ${
                 plan.popular
-                  ? 'border-green-500 dark:border-green-400 bg-green-50/50 dark:bg-green-950/20'
-                  : 'border-zinc-200 dark:border-zinc-800'
+                  ? 'border-green-500 bg-green-50/50'
+                  : 'border-green-200'
               }`}
             >
               {plan.popular && (
@@ -85,27 +85,27 @@ export default function Pricing() {
                 </div>
               )}
               <div className="mb-6">
-                <h3 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 mb-2">{plan.name}</h3>
+                <h3 className="text-2xl font-bold text-green-800 mb-2">{plan.name}</h3>
                 <div className="flex items-baseline gap-2 mb-2">
-                  <span className="text-4xl font-bold text-zinc-900 dark:text-zinc-50">{plan.price}</span>
+                  <span className="text-4xl font-bold text-green-800">{plan.price}</span>
                   {plan.period && (
-                    <span className="text-zinc-600 dark:text-zinc-400">{plan.period}</span>
+                    <span className="text-green-700">{plan.period}</span>
                   )}
                 </div>
-                <p className="text-zinc-600 dark:text-zinc-400">{plan.description}</p>
+                <p className="text-green-700">{plan.description}</p>
               </div>
               <ul className="space-y-4 mb-8">
                 {plan.features.map((feature, featureIndex) => (
                   <li key={featureIndex} className="flex items-start gap-3">
                     <svg
-                      className="w-5 h-5 text-green-600 dark:text-green-400 mt-0.5 flex-shrink-0"
+                      className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
                     >
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    <span className="text-zinc-600 dark:text-zinc-400">{feature}</span>
+                    <span className="text-green-700">{feature}</span>
                   </li>
                 ))}
               </ul>
@@ -113,8 +113,8 @@ export default function Pricing() {
                 href={plan.name === 'Enterprise' ? 'mailto:sales@mcflow.ng' : 'https://dashboard.mcflow.ng/signup'}
                 className={`block w-full text-center px-6 py-3 rounded-lg font-medium transition-colors ${
                   plan.popular
-                    ? 'bg-zinc-900 dark:bg-zinc-50 text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-200'
-                    : 'border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-zinc-50 hover:bg-zinc-50 dark:hover:bg-zinc-900'
+                    ? 'bg-green-600 text-white hover:bg-green-700'
+                    : 'border border-green-300 text-green-800 hover:bg-green-50'
                 }`}
               >
                 {plan.cta}
@@ -124,7 +124,7 @@ export default function Pricing() {
         </div>
 
         <div className="mt-16 max-w-3xl mx-auto">
-          <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 mb-6 text-center">
+          <h2 className="text-2xl font-bold text-green-800 mb-6 text-center">
             Frequently Asked Questions
           </h2>
           <div className="space-y-6">
@@ -146,21 +146,21 @@ export default function Pricing() {
                 answer: 'No, there are no setup fees. You only pay for the plan you choose.',
               },
             ].map((faq, index) => (
-              <div key={index} className="p-6 border border-zinc-200 dark:border-zinc-800 rounded-lg">
-                <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">{faq.question}</h3>
-                <p className="text-zinc-600 dark:text-zinc-400">{faq.answer}</p>
+              <div key={index} className="p-6 border-2 border-green-200 rounded-lg">
+                <h3 className="font-semibold text-green-800 mb-2">{faq.question}</h3>
+                <p className="text-green-700">{faq.answer}</p>
               </div>
             ))}
           </div>
         </div>
 
         <div className="mt-16 text-center">
-          <p className="text-zinc-600 dark:text-zinc-400 mb-4">
+          <p className="text-green-700 mb-4">
             Need help choosing a plan? We&apos;re here to help.
           </p>
           <a
             href="mailto:sales@mcflow.ng"
-            className="inline-block px-6 py-3 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-zinc-50 rounded-lg font-medium hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors"
+            className="inline-block px-6 py-3 border border-green-300 text-green-800 rounded-lg font-medium hover:bg-green-50 transition-colors"
           >
             Contact Sales
           </a>
