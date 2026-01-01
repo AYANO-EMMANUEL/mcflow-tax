@@ -1,7 +1,9 @@
 import { Link, useLocation } from 'react-router-dom';
+import { useState } from 'react';
 
 export default function APISidebar() {
   const location = useLocation();
+  const [openCategories, setOpenCategories] = useState<string[]>([]);
   
   const sections = [
     { title: 'mcflow Nigeria API Introduction', href: '/api-reference' },
@@ -65,6 +67,14 @@ export default function APISidebar() {
     },
   ];
 
+  const toggleCategory = (category: string) => {
+    setOpenCategories(prev => 
+      prev.includes(category) 
+        ? prev.filter(c => c !== category)
+        : [...prev, category]
+    );
+  };
+
   return (
     <aside className="w-64 bg-white border-r border-gray-200 h-screen sticky top-0 overflow-y-auto">
       <div className="p-6">
@@ -93,34 +103,52 @@ export default function APISidebar() {
         <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">
           mcflow Nigeria API
         </h3>
-        <nav className="space-y-4">
+        <nav className="space-y-2">
           {apiEndpoints.map((group, groupIndex) => (
             <div key={groupIndex}>
-              <h4 className="text-sm font-semibold text-gray-900 mb-2 px-3">{group.category}</h4>
-              <ul className="space-y-0.5">
-                {group.endpoints.map((endpoint, endpointIndex) => (
-                  <li key={endpointIndex}>
-                    <Link
-                      to={endpoint.href}
-                      className={`flex items-start gap-2 px-3 py-1.5 text-sm rounded-md transition-colors group ${
-                        location.pathname === endpoint.href
-                          ? 'bg-green-50 text-green-700'
-                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                      }`}
-                    >
-                      <span className={`text-xs font-mono font-semibold mt-0.5 flex-shrink-0 ${
-                        endpoint.method === 'GET' ? 'text-blue-600' : 
-                        endpoint.method === 'POST' ? 'text-green-600' :
-                        endpoint.method === 'PUT' ? 'text-orange-600' :
-                        'text-gray-600'
-                      }`}>
-                        {endpoint.method.toLowerCase()}
-                      </span>
-                      <span className="text-xs leading-relaxed">{endpoint.name}</span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
+              <button
+                onClick={() => toggleCategory(group.category)}
+                className="w-full flex items-center justify-between px-3 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50 rounded-md transition-colors"
+              >
+                <span>{group.category}</span>
+                <svg
+                  className={`w-4 h-4 transition-transform ${
+                    openCategories.includes(group.category) ? 'rotate-90' : ''
+                  }`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+              
+              {openCategories.includes(group.category) && (
+                <ul className="space-y-0.5 mt-1 ml-2">
+                  {group.endpoints.map((endpoint, endpointIndex) => (
+                    <li key={endpointIndex}>
+                      <Link
+                        to={endpoint.href}
+                        className={`flex items-start gap-2 px-3 py-1.5 text-sm rounded-md transition-colors group ${
+                          location.pathname === endpoint.href
+                            ? 'bg-green-50 text-green-700'
+                            : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                        }`}
+                      >
+                        <span className={`text-xs font-mono font-semibold mt-0.5 flex-shrink-0 ${
+                          endpoint.method === 'GET' ? 'text-blue-600' : 
+                          endpoint.method === 'POST' ? 'text-green-600' :
+                          endpoint.method === 'PUT' ? 'text-orange-600' :
+                          'text-gray-600'
+                        }`}>
+                          {endpoint.method.toLowerCase()}
+                        </span>
+                        <span className="text-xs leading-relaxed">{endpoint.name}</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           ))}
         </nav>
