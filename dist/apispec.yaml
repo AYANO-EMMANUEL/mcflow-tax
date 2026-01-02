@@ -1,0 +1,1177 @@
+openapi: 3.0.3
+info:
+  title: McFlow E-Invoice API
+  description: |
+    **McFlow E-Invoice Middleware API for External Integrations**
+    
+    This API allows you to integrate your systems with Nigeria's FIRS e-invoicing platform through McFlow.
+    
+    ## Authentication
+    
+    All endpoints require an API key for authentication. Include your API key in the `X-API-Key` header:
+    
+    ```
+    X-API-Key: mcflow_live_your_api_key_here
+    ```
+    
+    ### API Key Types
+    - **Test Keys** (`mcflow_test_*`): For testing with sandbox data
+    - **Live Keys** (`mcflow_live_*`): For production use with real FIRS submissions
+    
+    ## Base URL
+    - **Production**: `https://api.mcflow.ng`
+    - **Sandbox**: `https://sandbox.mcflow.ng`
+    
+    ## Rate Limits
+    - 100 requests per minute per API key
+    - 10,000 requests per day per API key
+    
+    ## Important Notes
+    - API keys are scoped to a single business
+    - All monetary amounts are in the smallest currency unit (kobo for NGN)
+    - Dates must be in `YYYY-MM-DD` format
+    - All timestamps are in ISO 8601 format (UTC)
+    
+  version: 1.0.0
+  contact:
+    name: McFlow Support
+    email: support@mcflow.ng
+    url: https://mcflow.ng/support
+  license:
+    name: Proprietary
+    url: https://mcflow.ng/terms
+
+servers:
+  - url: https://api.mcflow.ng/api
+    description: Production server
+  - url: https://sandbox.mcflow.ng/api
+    description: Sandbox server
+  - url: http://localhost:3001/api
+    description: Local development server
+
+tags:
+  - name: Business
+    description: View your business information
+  - name: Items
+    description: Manage products and services
+  - name: Parties
+    description: Manage customers and suppliers
+  - name: Invoices
+    description: Create and manage invoices
+  - name: FIRS
+    description: FIRS validation and submission
+
+security:
+  - ApiKeyAuth: []
+
+paths:
+  # ==================== BUSINESS ====================
+  /businesses/{businessId}:
+    get:
+      tags:
+        - Business
+      summary: Get business details
+      description: Retrieve details of your business. API keys can only access their own business.
+      operationId: getBusinessById
+      parameters:
+        - $ref: '#/components/parameters/BusinessId'
+      responses:
+        '200':
+          description: Business details retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    properties:
+                      business:
+                        $ref: '#/components/schemas/Business'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /businesses/tin/{tin}:
+    get:
+      tags:
+        - Business
+      summary: Get business by TIN
+      description: Retrieve business details by Tax Identification Number. Only returns your own business.
+      operationId: getBusinessByTIN
+      parameters:
+        - name: tin
+          in: path
+          required: true
+          description: Tax Identification Number
+          schema:
+            type: string
+            example: "12345678-0001"
+      responses:
+        '200':
+          description: Business found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    properties:
+                      business:
+                        $ref: '#/components/schemas/Business'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ==================== ITEMS ====================
+  /businesses/{businessId}/items:
+    get:
+      tags:
+        - Items
+      summary: List all items
+      description: Retrieve all products and services for your business
+      operationId: getItems
+      parameters:
+        - $ref: '#/components/parameters/BusinessId'
+      responses:
+        '200':
+          description: Items retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Item'
+                      count:
+                        type: integer
+                        example: 25
+
+    post:
+      tags:
+        - Items
+      summary: Create a new item
+      description: Add a new product or service to your catalog
+      operationId: createItem
+      parameters:
+        - $ref: '#/components/parameters/BusinessId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateItemRequest'
+      responses:
+        '201':
+          description: Item created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Item created successfully
+                  data:
+                    type: object
+                    properties:
+                      item:
+                        $ref: '#/components/schemas/Item'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /businesses/{businessId}/items/{itemId}:
+    get:
+      tags:
+        - Items
+      summary: Get item by ID
+      description: Retrieve details of a specific item
+      operationId: getItemById
+      parameters:
+        - $ref: '#/components/parameters/BusinessId'
+        - $ref: '#/components/parameters/ItemId'
+      responses:
+        '200':
+          description: Item retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    properties:
+                      item:
+                        $ref: '#/components/schemas/Item'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    patch:
+      tags:
+        - Items
+      summary: Update an item
+      description: Update details of an existing item
+      operationId: updateItem
+      parameters:
+        - $ref: '#/components/parameters/BusinessId'
+        - $ref: '#/components/parameters/ItemId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateItemRequest'
+      responses:
+        '200':
+          description: Item updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Item updated successfully
+                  data:
+                    type: object
+                    properties:
+                      item:
+                        $ref: '#/components/schemas/Item'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ==================== PARTIES ====================
+  /businesses/{businessId}/parties:
+    get:
+      tags:
+        - Parties
+      summary: List all parties
+      description: Retrieve all customers and suppliers for your business
+      operationId: getParties
+      parameters:
+        - $ref: '#/components/parameters/BusinessId'
+      responses:
+        '200':
+          description: Parties retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    properties:
+                      parties:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Party'
+                      count:
+                        type: integer
+                        example: 50
+
+    post:
+      tags:
+        - Parties
+      summary: Create a new party
+      description: Add a new customer or supplier
+      operationId: createParty
+      parameters:
+        - $ref: '#/components/parameters/BusinessId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePartyRequest'
+      responses:
+        '201':
+          description: Party created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Party created successfully
+                  data:
+                    type: object
+                    properties:
+                      party:
+                        $ref: '#/components/schemas/Party'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /businesses/{businessId}/parties/{partyId}:
+    get:
+      tags:
+        - Parties
+      summary: Get party by ID
+      description: Retrieve details of a specific party
+      operationId: getPartyById
+      parameters:
+        - $ref: '#/components/parameters/BusinessId'
+        - $ref: '#/components/parameters/PartyId'
+      responses:
+        '200':
+          description: Party retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    properties:
+                      party:
+                        $ref: '#/components/schemas/Party'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    patch:
+      tags:
+        - Parties
+      summary: Update a party
+      description: Update details of an existing party
+      operationId: updateParty
+      parameters:
+        - $ref: '#/components/parameters/BusinessId'
+        - $ref: '#/components/parameters/PartyId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePartyRequest'
+      responses:
+        '200':
+          description: Party updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Party updated successfully
+                  data:
+                    type: object
+                    properties:
+                      party:
+                        $ref: '#/components/schemas/Party'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ==================== INVOICES ====================
+  /businesses/{businessId}/invoices:
+    get:
+      tags:
+        - Invoices
+      summary: List all invoices
+      description: Retrieve all invoices for your business with optional filters
+      operationId: getInvoices
+      parameters:
+        - $ref: '#/components/parameters/BusinessId'
+        - name: payment_status
+          in: query
+          description: Filter by payment status
+          schema:
+            type: string
+            enum: [pending, paid, overdue, cancelled]
+        - name: firs_status
+          in: query
+          description: Filter by FIRS validation status
+          schema:
+            type: string
+            enum: [draft, validated, submitted, rejected]
+        - name: start_date
+          in: query
+          description: Filter invoices from this date (YYYY-MM-DD)
+          schema:
+            type: string
+            format: date
+        - name: end_date
+          in: query
+          description: Filter invoices until this date (YYYY-MM-DD)
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Invoices retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    properties:
+                      invoices:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Invoice'
+                      count:
+                        type: integer
+                        example: 100
+
+    post:
+      tags:
+        - Invoices
+      summary: Create a new invoice
+      description: |
+        Create a new invoice. The system will automatically:
+        - Calculate all totals and tax amounts
+        - Enrich with supplier and customer details
+        - Generate IRN (Invoice Reference Number)
+        - Apply tax rates from item catalog
+      operationId: createInvoice
+      parameters:
+        - $ref: '#/components/parameters/BusinessId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateInvoiceRequest'
+            examples:
+              simple:
+                summary: Simple invoice with one item
+                value:
+                  business_id: "6947f61d5eef510478c1b636"
+                  party_id: "694952e9ff3b706c723f54b8"
+                  invoice_type_code: "380"
+                  issue_date: "2024-12-27"
+                  due_date: "2025-01-27"
+                  document_currency_code: "NGN"
+                  note: "Thank you for your business"
+                  invoice_line:
+                    - item_id: "694953a1ff3b706c723f54c1"
+                      invoiced_quantity: 5
+                      price_amount: 10000
+                      discount_rate: 10
+              multiple_items:
+                summary: Invoice with multiple items
+                value:
+                  business_id: "6947f61d5eef510478c1b636"
+                  party_id: "694952e9ff3b706c723f54b8"
+                  invoice_type_code: "380"
+                  issue_date: "2024-12-27"
+                  document_currency_code: "NGN"
+                  invoice_line:
+                    - item_id: "694953a1ff3b706c723f54c1"
+                      invoiced_quantity: 2
+                      price_amount: 25000
+                    - item_id: "694953a1ff3b706c723f54c2"
+                      invoiced_quantity: 10
+                      price_amount: 5000
+                      discount_rate: 5
+      responses:
+        '201':
+          description: Invoice created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Invoice created successfully
+                  data:
+                    type: object
+                    properties:
+                      invoice:
+                        $ref: '#/components/schemas/Invoice'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /invoices/{invoiceId}:
+    get:
+      tags:
+        - Invoices
+      summary: Get invoice by ID
+      description: Retrieve full details of a specific invoice
+      operationId: getInvoiceById
+      parameters:
+        - $ref: '#/components/parameters/InvoiceId'
+      responses:
+        '200':
+          description: Invoice retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    properties:
+                      invoice:
+                        $ref: '#/components/schemas/Invoice'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /invoices/{invoiceId}/payment-status:
+    patch:
+      tags:
+        - Invoices
+      summary: Update payment status
+      description: Update the payment status of an invoice
+      operationId: updatePaymentStatus
+      parameters:
+        - $ref: '#/components/parameters/InvoiceId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - payment_status
+              properties:
+                payment_status:
+                  type: string
+                  enum: [pending, paid, overdue, cancelled]
+                  description: New payment status
+                payment_date:
+                  type: string
+                  format: date
+                  description: Date of payment (required if status is 'paid')
+              example:
+                payment_status: paid
+                payment_date: "2024-12-27"
+      responses:
+        '200':
+          description: Payment status updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Payment status updated successfully
+                  data:
+                    type: object
+                    properties:
+                      invoice:
+                        $ref: '#/components/schemas/Invoice'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /invoices/{invoiceId}/validate:
+    post:
+      tags:
+        - FIRS
+      summary: Validate invoice with FIRS
+      description: |
+        Submit invoice to FIRS for validation. This will:
+        - Validate the invoice structure
+        - Check compliance with FIRS requirements
+        - Generate QR code
+        - Return IRN for validated invoices
+      operationId: validateInvoice
+      parameters:
+        - $ref: '#/components/parameters/InvoiceId'
+      responses:
+        '200':
+          description: Invoice validated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Invoice validated successfully
+                  data:
+                    type: object
+                    properties:
+                      invoice:
+                        $ref: '#/components/schemas/Invoice'
+        '400':
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: fail
+                  message:
+                    type: string
+                    example: Invoice validation failed
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                        message:
+                          type: string
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: |
+        API key for authentication. Format: `mcflow_live_*` or `mcflow_test_*`
+        
+        Example: `X-API-Key: mcflow_live_abc123def456...`
+
+  parameters:
+    BusinessId:
+      name: businessId
+      in: path
+      required: true
+      description: Business ID (must match your API key's business)
+      schema:
+        type: string
+        example: "6947f61d5eef510478c1b636"
+
+    ItemId:
+      name: itemId
+      in: path
+      required: true
+      description: Item ID
+      schema:
+        type: string
+        example: "694953a1ff3b706c723f54c1"
+
+    PartyId:
+      name: partyId
+      in: path
+      required: true
+      description: Party ID
+      schema:
+        type: string
+        example: "694952e9ff3b706c723f54b8"
+
+    InvoiceId:
+      name: invoiceId
+      in: path
+      required: true
+      description: Invoice ID
+      schema:
+        type: string
+        example: "695001b74cafb46f24ffb101"
+
+  schemas:
+    Business:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: "6947f61d5eef510478c1b636"
+        taxpayer_name:
+          type: string
+          example: "Tech Solutions Ltd"
+        tax_identification_number:
+          type: string
+          example: "12345678-0001"
+        taxpayer_email:
+          type: string
+          format: email
+          example: "billing@techsolutions.com"
+        is_test:
+          type: boolean
+          description: Whether this is a test business
+          example: false
+        active:
+          type: boolean
+          example: true
+        address:
+          type: object
+          properties:
+            street_name:
+              type: string
+            city_name:
+              type: string
+            postal_zone:
+              type: string
+            country_code:
+              type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    Item:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: "694953a1ff3b706c723f54c1"
+        business_id:
+          type: string
+        item_name:
+          type: string
+          example: "Enterprise Software License"
+        display_name:
+          type: string
+          example: "Software License - Annual"
+        description:
+          type: string
+          example: "Annual subscription for enterprise software"
+        item_code:
+          type: string
+          example: "SOFT-ENT-001"
+        hsn_code:
+          type: string
+          example: "998314"
+        product_category:
+          type: string
+          example: "Software"
+        tax_category_code:
+          type: string
+          example: "STANDARD_VAT"
+        is_service:
+          type: boolean
+          example: true
+        active:
+          type: boolean
+          example: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    CreateItemRequest:
+      type: object
+      required:
+        - item_name
+        - hsn_code
+        - product_category
+        - tax_category_code
+      properties:
+        item_name:
+          type: string
+          example: "Premium Widget"
+        display_name:
+          type: string
+          example: "Premium Widget - Industrial Grade"
+        description:
+          type: string
+          example: "High-quality widget for industrial use"
+        item_code:
+          type: string
+          example: "WIDGET-001"
+        hsn_code:
+          type: string
+          example: "8481.10"
+        product_category:
+          type: string
+          example: "Industrial Equipment"
+        tax_category_code:
+          type: string
+          example: "STANDARD_VAT"
+        is_service:
+          type: boolean
+          default: false
+        active:
+          type: boolean
+          default: true
+
+    UpdateItemRequest:
+      type: object
+      properties:
+        item_name:
+          type: string
+        display_name:
+          type: string
+        description:
+          type: string
+        item_code:
+          type: string
+        active:
+          type: boolean
+
+    Party:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: "694952e9ff3b706c723f54b8"
+        business_id:
+          type: string
+        name:
+          type: string
+          example: "ABC Corporation"
+        tax_identification_number:
+          type: string
+          example: "87654321-0001"
+        email:
+          type: string
+          format: email
+          example: "accounts@abccorp.com"
+        phone:
+          type: string
+          example: "+2348098765432"
+        address:
+          type: object
+          properties:
+            street_name:
+              type: string
+            city_name:
+              type: string
+            postal_zone:
+              type: string
+            country_code:
+              type: string
+        active:
+          type: boolean
+          example: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    CreatePartyRequest:
+      type: object
+      required:
+        - name
+        - tax_identification_number
+        - email
+        - address
+      properties:
+        name:
+          type: string
+          example: "ABC Corporation"
+        tax_identification_number:
+          type: string
+          example: "87654321-0001"
+        email:
+          type: string
+          format: email
+          example: "accounts@abccorp.com"
+        phone:
+          type: string
+          example: "+2348098765432"
+        address:
+          type: object
+          required:
+            - city_name
+            - country_code
+          properties:
+            street_name:
+              type: string
+              example: "45 Victoria Island"
+            city_name:
+              type: string
+              example: "Lagos"
+            postal_zone:
+              type: string
+              example: "101002"
+            country_code:
+              type: string
+              example: "NG"
+
+    UpdatePartyRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        address:
+          type: object
+          properties:
+            street_name:
+              type: string
+            city_name:
+              type: string
+            postal_zone:
+              type: string
+            country_code:
+              type: string
+        active:
+          type: boolean
+
+    CreateInvoiceRequest:
+      type: object
+      required:
+        - business_id
+        - party_id
+        - invoice_type_code
+        - issue_date
+        - document_currency_code
+        - invoice_line
+      properties:
+        business_id:
+          type: string
+          description: Your business ID (must match API key)
+          example: "6947f61d5eef510478c1b636"
+        party_id:
+          type: string
+          description: Customer party ID
+          example: "694952e9ff3b706c723f54b8"
+        invoice_type_code:
+          type: string
+          description: Invoice type (380 = standard invoice)
+          example: "380"
+        issue_date:
+          type: string
+          format: date
+          description: Invoice issue date (YYYY-MM-DD)
+          example: "2024-12-27"
+        due_date:
+          type: string
+          format: date
+          description: Payment due date (YYYY-MM-DD)
+          example: "2025-01-27"
+        document_currency_code:
+          type: string
+          description: Currency code (NGN for Naira)
+          example: "NGN"
+        payment_means_code:
+          type: string
+          description: Payment method code (optional)
+          example: "30"
+        note:
+          type: string
+          description: Additional notes or terms
+          example: "Thank you for your business. Payment due within 30 days."
+        invoice_line:
+          type: array
+          minItems: 1
+          description: Invoice line items
+          items:
+            type: object
+            required:
+              - item_id
+              - invoiced_quantity
+              - price_amount
+            properties:
+              item_id:
+                type: string
+                description: Item ID from your catalog
+                example: "694953a1ff3b706c723f54c1"
+              invoiced_quantity:
+                type: number
+                minimum: 0.01
+                description: Quantity of items
+                example: 5
+              price_amount:
+                type: number
+                minimum: 0
+                description: Unit price in kobo
+                example: 10000
+              discount_rate:
+                type: number
+                minimum: 0
+                maximum: 100
+                description: Discount percentage (optional)
+                example: 10
+              tax_rate:
+                type: number
+                minimum: 0
+                maximum: 100
+                description: Tax rate percentage (only for variable-rate items)
+                example: 7.5
+
+    Invoice:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: "695001b74cafb46f24ffb101"
+        business_id:
+          type: string
+        party_id:
+          type: string
+        irn:
+          type: string
+          description: Invoice Reference Number
+          example: "INV240001-undefined-20241227"
+        invoice_number:
+          type: string
+          example: "INV240001"
+        issue_date:
+          type: string
+          format: date
+        due_date:
+          type: string
+          format: date
+        invoice_type_code:
+          type: string
+        payment_status:
+          type: string
+          enum: [pending, paid, overdue, cancelled]
+        firs_status:
+          type: string
+          enum: [draft, validated, submitted, rejected]
+        document_currency_code:
+          type: string
+        note:
+          type: string
+        accounting_supplier_party:
+          type: object
+          description: Supplier (your business) details
+        accounting_customer_party:
+          type: object
+          description: Customer details
+        invoice_line:
+          type: array
+          description: Invoice line items with calculated amounts
+          items:
+            type: object
+        tax_total:
+          type: array
+          description: Tax breakdown
+        legal_monetary_total:
+          type: object
+          description: Calculated totals
+          properties:
+            line_extension_amount:
+              type: number
+              description: Total before tax
+            tax_exclusive_amount:
+              type: number
+            tax_inclusive_amount:
+              type: number
+              description: Total including tax
+            payable_amount:
+              type: number
+              description: Final amount to pay
+        firs_qr_code:
+          type: string
+          description: QR code for validated invoices
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    Error:
+      type: object
+      properties:
+        status:
+          type: string
+          example: fail
+        message:
+          type: string
+          example: An error occurred
+
+  responses:
+    BadRequest:
+      description: Bad request - Invalid input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            status: fail
+            message: Validation failed
+            errors:
+              - field: invoice_line
+                message: At least one line item is required
+
+    Unauthorized:
+      description: Unauthorized - Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            status: fail
+            message: Invalid API key
+
+    Forbidden:
+      description: Forbidden - Access denied
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            status: fail
+            message: API keys can only access their own business
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            status: fail
+            message: Resource not found
+
+    RateLimitExceeded:
+      description: Rate limit exceeded
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            status: fail
+            message: Rate limit exceeded. Please try again later.
