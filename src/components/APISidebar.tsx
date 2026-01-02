@@ -13,7 +13,7 @@ export default function APISidebar() {
   ]);
 
   const sections = [
-    { title: "mcflow Nigeria API Introduction", href: "/api-reference" },
+    { title: "McFlow Nigeria API Introduction", href: "/api-reference" },
     {
       title: "Prerequisites of using the API",
       href: "/api-reference/prerequisites",
@@ -181,7 +181,7 @@ export default function APISidebar() {
     <aside className="w-64 bg-white border-r border-gray-200 h-screen sticky top-0 overflow-y-auto">
       <div className="p-6">
         <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">
-          MCFLOW API REFERENCE
+          McFLOW API REFERENCE
         </h2>
 
         {/* Main sections */}
@@ -203,7 +203,7 @@ export default function APISidebar() {
 
         {/* API Endpoints */}
         <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">
-          mcflow Nigeria API
+          McFlow Nigeria API
         </h3>
         <nav className="space-y-2">
           {apiEndpoints.map((group, groupIndex) => (

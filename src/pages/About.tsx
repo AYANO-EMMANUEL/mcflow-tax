@@ -16,7 +16,7 @@ export default function About() {
             <div className="mb-12">
               <h2 className="text-2xl font-bold text-green-800 mb-4">Our Mission</h2>
               <p className="text-green-700 mb-4">
-                mcflow is Nigeria&apos;s leading tax platform, designed to simplify tax compliance for businesses and developers. 
+                McFlow is Nigeria&apos;s leading tax platform, designed to simplify tax compliance for businesses and developers. 
                 We provide seamless integration with FIRS E-Invoicing System, enabling businesses to automate their tax processes 
                 and reduce platform-hopping.
               </p>

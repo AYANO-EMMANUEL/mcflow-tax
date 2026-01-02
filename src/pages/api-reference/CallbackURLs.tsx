@@ -1,13 +1,13 @@
-import TableOfContents from '../../components/TableOfContents';
-import CodeBlock from '../../components/CodeBlock';
+import TableOfContents from "../../components/TableOfContents";
+import CodeBlock from "../../components/CodeBlock";
 
 export default function CallbackURLs() {
   const tocSections = [
-    { id: 'overview', title: 'Overview' },
-    { id: 'setup', title: 'Setting Up Callbacks' },
-    { id: 'events', title: 'Supported Events' },
-    { id: 'payload', title: 'Payload Structure' },
-    { id: 'security', title: 'Security' },
+    { id: "overview", title: "Overview" },
+    { id: "setup", title: "Setting Up Callbacks" },
+    { id: "events", title: "Supported Events" },
+    { id: "payload", title: "Payload Structure" },
+    { id: "security", title: "Security" },
   ];
 
   return (
@@ -20,18 +20,22 @@ export default function CallbackURLs() {
         <section id="overview" className="mb-12">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Overview</h2>
           <p className="text-gray-700 leading-relaxed mb-4">
-            Callback URLs (also known as webhooks) allow you to receive real-time notifications when events 
-            occur in your mcflow account. This enables you to automate workflows and keep your systems in sync.
+            Callback URLs (also known as webhooks) allow you to receive
+            real-time notifications when events occur in your McFlow account.
+            This enables you to automate workflows and keep your systems in
+            sync.
           </p>
         </section>
 
         <section id="setup" className="mb-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Setting Up Callbacks</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            Setting Up Callbacks
+          </h2>
           <p className="text-gray-700 leading-relaxed mb-4">
             To configure callback URLs:
           </p>
           <ol className="list-decimal list-inside space-y-2 text-gray-700 ml-4 mb-6">
-            <li>Log in to your mcflow Dashboard</li>
+            <li>Log in to your McFlow Dashboard</li>
             <li>Navigate to Settings → Webhooks</li>
             <li>Click "Add Webhook"</li>
             <li>Enter your callback URL</li>
@@ -39,7 +43,9 @@ export default function CallbackURLs() {
             <li>Save your configuration</li>
           </ol>
 
-          <h3 className="text-lg font-semibold text-gray-900 mb-3">Example Configuration</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-3">
+            Example Configuration
+          </h3>
           <CodeBlock
             language="json"
             code={`{
@@ -56,40 +62,89 @@ export default function CallbackURLs() {
         </section>
 
         <section id="events" className="mb-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Supported Events</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            Supported Events
+          </h2>
           <div className="space-y-4">
             <div className="border-l-4 border-green-500 bg-green-50 p-4">
-              <h4 className="font-semibold text-gray-900 mb-2">Invoice Events</h4>
+              <h4 className="font-semibold text-gray-900 mb-2">
+                Invoice Events
+              </h4>
               <ul className="list-disc list-inside space-y-1 text-gray-700 text-sm ml-4">
-                <li><code className="text-xs bg-gray-100 px-2 py-1 rounded">invoice.created</code> - New invoice created</li>
-                <li><code className="text-xs bg-gray-100 px-2 py-1 rounded">invoice.paid</code> - Invoice marked as paid</li>
-                <li><code className="text-xs bg-gray-100 px-2 py-1 rounded">invoice.cancelled</code> - Invoice cancelled</li>
+                <li>
+                  <code className="text-xs bg-gray-100 px-2 py-1 rounded">
+                    invoice.created
+                  </code>{" "}
+                  - New invoice created
+                </li>
+                <li>
+                  <code className="text-xs bg-gray-100 px-2 py-1 rounded">
+                    invoice.paid
+                  </code>{" "}
+                  - Invoice marked as paid
+                </li>
+                <li>
+                  <code className="text-xs bg-gray-100 px-2 py-1 rounded">
+                    invoice.cancelled
+                  </code>{" "}
+                  - Invoice cancelled
+                </li>
               </ul>
             </div>
 
             <div className="border-l-4 border-blue-500 bg-blue-50 p-4">
-              <h4 className="font-semibold text-gray-900 mb-2">Payment Events</h4>
+              <h4 className="font-semibold text-gray-900 mb-2">
+                Payment Events
+              </h4>
               <ul className="list-disc list-inside space-y-1 text-gray-700 text-sm ml-4">
-                <li><code className="text-xs bg-gray-100 px-2 py-1 rounded">payment.initiated</code> - Payment started</li>
-                <li><code className="text-xs bg-gray-100 px-2 py-1 rounded">payment.completed</code> - Payment successful</li>
-                <li><code className="text-xs bg-gray-100 px-2 py-1 rounded">payment.failed</code> - Payment failed</li>
+                <li>
+                  <code className="text-xs bg-gray-100 px-2 py-1 rounded">
+                    payment.initiated
+                  </code>{" "}
+                  - Payment started
+                </li>
+                <li>
+                  <code className="text-xs bg-gray-100 px-2 py-1 rounded">
+                    payment.completed
+                  </code>{" "}
+                  - Payment successful
+                </li>
+                <li>
+                  <code className="text-xs bg-gray-100 px-2 py-1 rounded">
+                    payment.failed
+                  </code>{" "}
+                  - Payment failed
+                </li>
               </ul>
             </div>
 
             <div className="border-l-4 border-purple-500 bg-purple-50 p-4">
               <h4 className="font-semibold text-gray-900 mb-2">Party Events</h4>
               <ul className="list-disc list-inside space-y-1 text-gray-700 text-sm ml-4">
-                <li><code className="text-xs bg-gray-100 px-2 py-1 rounded">party.created</code> - New party created</li>
-                <li><code className="text-xs bg-gray-100 px-2 py-1 rounded">party.updated</code> - Party information updated</li>
+                <li>
+                  <code className="text-xs bg-gray-100 px-2 py-1 rounded">
+                    party.created
+                  </code>{" "}
+                  - New party created
+                </li>
+                <li>
+                  <code className="text-xs bg-gray-100 px-2 py-1 rounded">
+                    party.updated
+                  </code>{" "}
+                  - Party information updated
+                </li>
               </ul>
             </div>
           </div>
         </section>
 
         <section id="payload" className="mb-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Payload Structure</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            Payload Structure
+          </h2>
           <p className="text-gray-700 leading-relaxed mb-4">
-            When an event occurs, mcflow will send a POST request to your callback URL with the following structure:
+            When an event occurs, McFlow will send a POST request to your
+            callback URL with the following structure:
           </p>
           <CodeBlock
             language="json"
@@ -115,11 +170,13 @@ export default function CallbackURLs() {
         <section id="security" className="mb-12">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Security</h2>
           <p className="text-gray-700 leading-relaxed mb-4">
-            All webhook payloads are signed using HMAC-SHA256. You should verify the signature to ensure 
-            the request is from mcflow.
+            All webhook payloads are signed using HMAC-SHA256. You should verify
+            the signature to ensure the request is from McFlow.
           </p>
-          
-          <h3 className="text-lg font-semibold text-gray-900 mb-3">Verifying Signatures</h3>
+
+          <h3 className="text-lg font-semibold text-gray-900 mb-3">
+            Verifying Signatures
+          </h3>
           <CodeBlock
             language="javascript"
             code={`const crypto = require('crypto');
@@ -143,8 +200,8 @@ const isValid = verifyWebhookSignature(
 
           <div className="bg-yellow-50 border-l-4 border-yellow-500 p-4 mt-6">
             <p className="text-yellow-800 text-sm">
-              <strong>Important:</strong> Always verify webhook signatures before processing the payload 
-              to prevent unauthorized requests.
+              <strong>Important:</strong> Always verify webhook signatures
+              before processing the payload to prevent unauthorized requests.
             </p>
           </div>
         </section>

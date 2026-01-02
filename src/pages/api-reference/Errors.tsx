@@ -32,7 +32,7 @@ export default function Errors() {
         <section id="overview" className="mb-12">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Overview</h2>
           <p className="text-gray-700 leading-relaxed mb-4">
-            The mcflow API uses standard HTTP response codes to indicate the success or failure of requests. 
+            The McFlow API uses standard HTTP response codes to indicate the success or failure of requests. 
             Understanding these codes helps you handle errors appropriately in your application.
           </p>
         </section>
