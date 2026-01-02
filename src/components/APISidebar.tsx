@@ -1,78 +1,180 @@
-import { Link, useLocation } from 'react-router-dom';
-import { useState } from 'react';
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 export default function APISidebar() {
   const location = useLocation();
-  const [openCategories, setOpenCategories] = useState<string[]>([]);
-  
+  const navigate = useNavigate();
+  const [openCategories, setOpenCategories] = useState<string[]>([
+    "Business",
+    "Items",
+    "Parties",
+    "Invoices",
+    "FIRS",
+  ]);
+
   const sections = [
-    { title: 'mcflow Nigeria API Introduction', href: '/api-reference' },
-    { title: 'Prerequisites of using the API', href: '/api-reference/prerequisites' },
-    { title: 'Feature: Callback URLs', href: '/api-reference/callback-urls' },
-    { title: 'Transaction Status', href: '/api-reference/transaction-status' },
-    { title: 'Errors and HTTP response codes', href: '/api-reference/errors' },
+    { title: "mcflow Nigeria API Introduction", href: "/api-reference" },
+    {
+      title: "Prerequisites of using the API",
+      href: "/api-reference/prerequisites",
+    },
+    { title: "Feature: Callback URLs", href: "/api-reference/callback-urls" },
+    { title: "Transaction Status", href: "/api-reference/transaction-status" },
+    { title: "Errors and HTTP response codes", href: "/api-reference/errors" },
   ];
 
   const apiEndpoints = [
     {
-      category: 'Resources',
+      category: "Business",
+      tag: "Business",
       endpoints: [
-        { name: 'Get FIRS Countries', method: 'GET', href: '/api-reference/get-resources-countries' },
-        { name: 'Get FIRS Currencies', method: 'GET', href: '/api-reference/get-resources-currencies' },
-        { name: 'Get FIRS Tax Categories', method: 'GET', href: '/api-reference/get-resources-tax-categories' },
-        { name: 'Get FIRS Invoice Types', method: 'GET', href: '/api-reference/get-resources-invoice-types' },
-        { name: 'Get FIRS Payment Means', method: 'GET', href: '/api-reference/get-resources-payment-means' },
-        { name: 'Get FIRS Local Governments', method: 'GET', href: '/api-reference/get-resources-local-governments' },
-        { name: 'Get FIRS States', method: 'GET', href: '/api-reference/get-resources-states' },
-      ]
+        {
+          name: "Get business details",
+          method: "GET",
+          operationId: "getBusinessById",
+          path: "/businesses/{businessId}",
+        },
+        {
+          name: "Get business by TIN",
+          method: "GET",
+          operationId: "getBusinessByTIN",
+          path: "/businesses/tin/{tin}",
+        },
+      ],
     },
     {
-      category: 'Business',
+      category: "Items",
+      tag: "Items",
       endpoints: [
-        { name: 'Get FIRS Info', method: 'GET', href: '/api-reference/get-info' },
-      ]
+        {
+          name: "List all items",
+          method: "GET",
+          operationId: "getItems",
+          path: "/businesses/{businessId}/items",
+        },
+        {
+          name: "Create a new item",
+          method: "POST",
+          operationId: "createItem",
+          path: "/businesses/{businessId}/items",
+        },
+        {
+          name: "Get item by ID",
+          method: "GET",
+          operationId: "getItemById",
+          path: "/businesses/{businessId}/items/{itemId}",
+        },
+        {
+          name: "Update an item",
+          method: "PATCH",
+          operationId: "updateItem",
+          path: "/businesses/{businessId}/items/{itemId}",
+        },
+      ],
     },
     {
-      category: 'Parties',
+      category: "Parties",
+      tag: "Parties",
       endpoints: [
-        { name: 'Get FIRS Parties', method: 'GET', href: '/api-reference/get-parties' },
-        { name: 'Create Party', method: 'POST', href: '/api-reference/post-parties' },
-        { name: 'Get a business party', method: 'GET', href: '/api-reference/get-parties-party-id' },
-      ]
+        {
+          name: "List all parties",
+          method: "GET",
+          operationId: "getParties",
+          path: "/businesses/{businessId}/parties",
+        },
+        {
+          name: "Create a new party",
+          method: "POST",
+          operationId: "createParty",
+          path: "/businesses/{businessId}/parties",
+        },
+        {
+          name: "Get party by ID",
+          method: "GET",
+          operationId: "getPartyById",
+          path: "/businesses/{businessId}/parties/{partyId}",
+        },
+        {
+          name: "Update a party",
+          method: "PATCH",
+          operationId: "updateParty",
+          path: "/businesses/{businessId}/parties/{partyId}",
+        },
+      ],
     },
     {
-      category: 'Items',
+      category: "Invoices",
+      tag: "Invoices",
       endpoints: [
-        { name: 'Get FIRS Items', method: 'GET', href: '/api-reference/get-items' },
-        { name: 'Create Item', method: 'POST', href: '/api-reference/post-items' },
-        { name: 'Get a business item', method: 'GET', href: '/api-reference/get-items-item-id' },
-      ]
+        {
+          name: "List all invoices",
+          method: "GET",
+          operationId: "getInvoices",
+          path: "/businesses/{businessId}/invoices",
+        },
+        {
+          name: "Create a new invoice",
+          method: "POST",
+          operationId: "createInvoice",
+          path: "/businesses/{businessId}/invoices",
+        },
+        {
+          name: "Get invoice by ID",
+          method: "GET",
+          operationId: "getInvoiceById",
+          path: "/invoices/{invoiceId}",
+        },
+        {
+          name: "Update payment status",
+          method: "PATCH",
+          operationId: "updatePaymentStatus",
+          path: "/invoices/{invoiceId}/payment-status",
+        },
+      ],
     },
     {
-      category: 'Invoices',
+      category: "FIRS",
+      tag: "FIRS",
       endpoints: [
-        { name: 'Get FIRS Invoices', method: 'GET', href: '/api-reference/get-invoices' },
-        { name: 'Create Invoice', method: 'POST', href: '/api-reference/post-invoices' },
-        { name: 'Get FIRS Credit Notes', method: 'GET', href: '/api-reference/get-credit-notes' },
-        { name: 'Create Credit Note', method: 'POST', href: '/api-reference/post-credit-notes' },
-        { name: 'Get FIRS Debit Notes', method: 'GET', href: '/api-reference/get-debit-notes' },
-        { name: 'Create Debit Note', method: 'POST', href: '/api-reference/post-debit-notes' },
-        { name: 'Get a business invoice', method: 'GET', href: '/api-reference/get-invoices-invoice-id' },
-        { name: 'Update an invoice payment status', method: 'PUT', href: '/api-reference/put-invoices-invoice-id-payment-status' },
-        { name: 'Get a business invoice by the invoice reference number', method: 'GET', href: '/api-reference/get-invoices-irn-invoice-reference-number' },
-        { name: 'Create invoice with the party and items information', method: 'POST', href: '/api-reference/post-detailed-invoices' },
-        { name: 'Create credit note with the item code in place of the item ID', method: 'POST', href: '/api-reference/post-credit-notes-with-item-codes' },
-        { name: 'Create debit note with the item code in place of the item ID', method: 'POST', href: '/api-reference/post-debit-notes-with-item-codes' },
-      ]
+        {
+          name: "Validate invoice with FIRS",
+          method: "POST",
+          operationId: "validateInvoice",
+          path: "/invoices/{invoiceId}/validate",
+        },
+      ],
     },
   ];
 
   const toggleCategory = (category: string) => {
-    setOpenCategories(prev => 
-      prev.includes(category) 
-        ? prev.filter(c => c !== category)
+    setOpenCategories((prev) =>
+      prev.includes(category)
+        ? prev.filter((c) => c !== category)
         : [...prev, category]
     );
+  };
+
+  const scrollToOperation = (tag: string, operationId: string) => {
+    // Navigate to Swagger page first if not already there
+    if (location.pathname !== "/api-reference/swagger") {
+      navigate("/api-reference/swagger");
+    }
+
+    // Swagger UI ID format: operations-{Tag}-{OperationID}
+    const swaggerId = `operations-${tag}-${operationId}`;
+
+    // Wait a bit for Swagger UI to render, then scroll to the operation
+    setTimeout(() => {
+      const element = document.getElementById(swaggerId);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "start" });
+        // Optionally expand the operation
+        const button = element.querySelector(".opblock-summary-control");
+        if (button && !element.classList.contains("is-open")) {
+          (button as HTMLElement).click();
+        }
+      }
+    }, 300);
   };
 
   return (
@@ -81,7 +183,7 @@ export default function APISidebar() {
         <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">
           MCFLOW API REFERENCE
         </h2>
-        
+
         {/* Main sections */}
         <nav className="space-y-1 mb-8">
           {sections.map((section, index) => (
@@ -90,8 +192,8 @@ export default function APISidebar() {
               to={section.href}
               className={`block px-3 py-2 text-sm rounded-md transition-colors ${
                 location.pathname === section.href
-                  ? 'bg-green-50 text-green-700 font-medium'
-                  : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
+                  ? "bg-green-50 text-green-700 font-medium"
+                  : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
               }`}
             >
               {section.title}
@@ -113,38 +215,50 @@ export default function APISidebar() {
                 <span>{group.category}</span>
                 <svg
                   className={`w-4 h-4 transition-transform ${
-                    openCategories.includes(group.category) ? 'rotate-90' : ''
+                    openCategories.includes(group.category) ? "rotate-90" : ""
                   }`}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
                 </svg>
               </button>
-              
+
               {openCategories.includes(group.category) && (
                 <ul className="space-y-0.5 mt-1 ml-2">
                   {group.endpoints.map((endpoint, endpointIndex) => (
                     <li key={endpointIndex}>
-                      <Link
-                        to={endpoint.href}
-                        className={`flex items-start gap-2 px-3 py-1.5 text-sm rounded-md transition-colors group ${
-                          location.pathname === endpoint.href
-                            ? 'bg-green-50 text-green-700'
-                            : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                        }`}
+                      <button
+                        onClick={() =>
+                          scrollToOperation(group.tag, endpoint.operationId)
+                        }
+                        className="w-full flex items-start gap-2 px-3 py-1.5 text-sm rounded-md transition-colors group text-gray-600 hover:text-gray-900 hover:bg-gray-50"
                       >
-                        <span className={`text-xs font-mono font-semibold mt-0.5 flex-shrink-0 ${
-                          endpoint.method === 'GET' ? 'text-blue-600' : 
-                          endpoint.method === 'POST' ? 'text-green-600' :
-                          endpoint.method === 'PUT' ? 'text-orange-600' :
-                          'text-gray-600'
-                        }`}>
+                        <span
+                          className={`text-xs font-mono font-semibold mt-0.5 flex-shrink-0 ${
+                            endpoint.method === "GET"
+                              ? "text-blue-600"
+                              : endpoint.method === "POST"
+                              ? "text-green-600"
+                              : endpoint.method === "PATCH"
+                              ? "text-orange-600"
+                              : endpoint.method === "PUT"
+                              ? "text-orange-600"
+                              : "text-gray-600"
+                          }`}
+                        >
                           {endpoint.method.toLowerCase()}
                         </span>
-                        <span className="text-xs leading-relaxed">{endpoint.name}</span>
-                      </Link>
+                        <span className="text-xs leading-relaxed text-left">
+                          {endpoint.name}
+                        </span>
+                      </button>
                     </li>
                   ))}
                 </ul>
