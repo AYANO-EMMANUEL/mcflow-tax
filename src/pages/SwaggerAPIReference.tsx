@@ -23,12 +23,22 @@ export default function SwaggerAPIReference() {
         color: #065f46;
         font-weight: 700;
       }
+      .swagger-ui .renderedMarkdown h2 {
+        font-size: 1.5rem;
+      }
+
+      .swagger-ui .renderedMarkdown ul{
+        margin-bottom: .8rem;
+        list-style-type: disc;
+        margin-left: 2rem;
+      }
       
       .swagger-ui .info .title small {
-        background: #d1fae5;
+        background: #0a0a0a;
         color: #065f46;
         padding: 4px 8px;
         border-radius: 4px;
+        font-size: 5rem;
       }
       
       .swagger-ui .info hgroup.main a {
